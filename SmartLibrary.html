@@ -1,0 +1,2424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+  <title>Library Companion</title>
+  <style>
+    :root {
+      --primary-color: #3498db;
+      --secondary-color: #2980b9;
+      --light-blue: #f0f8ff;
+      --dark-text: #2c3e50;
+      --light-text: #ecf0f1;
+      --success-color: #2ecc71;
+      --warning-color: #f39c12;
+      --danger-color: #e74c3c;
+      --admin-color: #9b59b6;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+
+
+
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      background-color: var(--light-blue);
+      color: var(--dark-text);
+      padding: 20px;
+      font-size: 1.05rem; /* Slightly larger text */
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1, h2, h3 {
+      color: var(--dark-text);
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid #ddd;
+    }
+
+   .dark-toggle {
+     position: absolute;
+     top: 20px;
+     right: 20px;
+     z-index: 1000;
+   }
+
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin: 1.5rem 0;
+      color: var(--primary-color);
+    }
+
+    .admin-header {
+      color: var(--admin-color);
+    }
+
+    .card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      border: 2px solid #ddd;
+      border-radius: var(--border-radius);
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+
+    /* 🌙 Dark Mode Fixes */
+    body.dark-mode {
+      --primary-color: #4dabf7;
+      --secondary-color: #339af0;
+      --dark-bg: #1e1e1e;
+      --light-bg: #2c2c2c;
+      --text-color: #f0f0f0;
+      --subtle-text: #cccccc;
+    }
+
+    body.dark-mode {
+      background-color: var(--dark-bg);
+      color: var(--text-color);
+    }
+
+    /* Card-like elements */
+    body.dark-mode .card,
+    body.dark-mode .book-item,
+    body.dark-mode .stat-card,
+    body.dark-mode .notification,
+    body.dark-mode .qr-code,
+    body.dark-mode .transaction-log .log-entry {
+      background-color: var(--light-bg);
+      color: var(--text-color);
+      border-color: #444;
+    }
+
+    /* Input fields */
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode textarea {
+      background-color: #2a2a2a;
+      color: var(--text-color);
+      border: 1px solid #555;
+    }
+
+    /* Availability and badges */
+    body.dark-mode .availability,
+    body.dark-mode .status-badge {
+      background-color: #444;
+      color: #fff;
+    }
+
+    /* Tabs and active elements */
+    body.dark-mode .tab {
+      background-color: transparent;
+      color: var(--text-color);
+    }
+    body.dark-mode .tab.active {
+      border-bottom-color: var(--primary-color);
+    }
+
+    /* Search icon and subtle text */
+    body.dark-mode .search-icon {
+      color: var(--subtle-text);
+    }
+
+    /* Buttons */
+    body.dark-mode button {
+      color: #fff;
+    }
+    body.dark-mode button.secondary {
+      background-color: #666;
+    }
+    body.dark-mode button.success {
+      background-color: #2ecc71;
+    }
+    body.dark-mode button.warning {
+      background-color: #f39c12;
+    }
+    body.dark-mode button.danger {
+      background-color: #e74c3c;
+    }
+    body.dark-mode button.admin {
+      background-color: #9b59b6;
+    }
+
+    /* Smooth transition */
+    body, .card, .book-item, input, select, textarea {
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode h1,
+    body.dark-mode h2,
+    body.dark-mode h3,
+    body.dark-mode label {
+      color: var(--text-color);
+      border-bottom-color: #444;
+    }
+
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-color);
+      outline: none;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: var(--transition);
+      width: auto;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    button.secondary {
+      background-color: #95a5a6;
+    }
+
+    button.success {
+      background-color: var(--success-color);
+    }
+
+    button.warning {
+      background-color: var(--warning-color);
+    }
+
+    button.danger {
+      background-color: var(--danger-color);
+    }
+
+    button.admin {
+      background-color: var(--admin-color);
+    }
+
+
+
+    .book-item {
+      background-color: #f8f9fa;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .book-item h3 {
+      color: var(--primary-color);
+    }
+
+    .availability {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+
+    .available {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .limited {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .unavailable {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .search-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+
+    .search-container input {
+      padding-left: 2.5rem;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #7f8c8d;
+    }
+
+    .qr-code {
+      text-align: center;
+      margin: 1.5rem 0;
+      padding: 1rem;
+      background-color: white;
+      border-radius: var(--border-radius);
+    }
+
+    .qr-code img {
+      max-width: 200px;
+      <!height: auto;>
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+
+    .timer {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: var(--warning-color);
+      text-align: center;
+      margin: 1rem 0;
+    }
+
+    .notification {
+      padding: 1rem;
+      border-radius: var(--border-radius);
+      margin-bottom: 1rem;
+      background-color: #e3f2fd;
+      border-left: 4px solid var(--primary-color);
+    }
+
+    .notification.warning {
+      background-color: #fff3e0;
+      border-left-color: var(--warning-color);
+    }
+
+    .notification.danger {
+      background-color: #ffebee;
+      border-left-color: var(--danger-color);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .flex-row {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .flex-row > * {
+      flex: 1;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-left: 0.5rem;
+    }
+
+    .status-reserved {
+      background-color: #d1ecf1;
+      color: #0c5460;
+    }
+
+    .status-borrowed {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .status-overdue {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ddd;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.8rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+
+    .tab.active {
+      border-bottom-color: var(--primary-color);
+      font-weight: bold;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background-color: white;
+      border-radius: var(--border-radius);
+      padding: 1rem;
+      text-align: center;
+      box-shadow: var(--box-shadow);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: #7f8c8d;
+    }
+
+    .chart-container {
+      height: 300px;
+      margin-bottom: 1.5rem;
+    }
+
+    .transaction-log {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      padding: 0.8rem;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .log-entry:nth-child(odd) {
+      background-color: #f9f9f9;
+    }
+
+    .log-action {
+      font-weight: bold;
+    }
+
+    .log-success {
+      color: var(--success-color);
+    }
+
+    .log-warning {
+      color: var(--warning-color);
+    }
+
+    .log-danger {
+      color: var(--danger-color);
+    }
+
+    .user-type-selector {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .user-type-btn {
+      padding: 0.8rem 1.5rem;
+      margin: 0 0.5rem;
+      cursor: pointer;
+      border-radius: var(--border-radius);
+      background-color: #ddd;
+      border: none;
+      font-weight: 600;
+    }
+
+    .user-type-btn.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    @media (max-width: 768px) {
+      .flex-row {
+        flex-direction: column;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1 id="mainHeader">Library Companion</h1>
+
+    <div class="dark-toggle" id="darkToggle">
+     <button onclick="toggleDarkMode()">🌙</button>
+    </div>
+   
+
+    
+
+    <!-- User Type Selection -->
+    <div class="user-type-selector" id="userTypeSelector">
+      <button class="user-type-btn active" onclick="selectUserType('student')">Student</button>
+      <button class="user-type-btn" onclick="selectUserType('librarian')">Librarian</button>
+    </div>
+
+
+    <!-- Login Section -->
+    <div class="card" id="loginSection">	
+      <h2 id="loginHeader">Student Login</h2>
+      <div class="form-group">
+        <label for="userEmail">Email</label>
+        <input type="email" id="userEmail" placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label for="userPassword">Password</label>
+        <input type="password" id="userPassword" placeholder="Enter your password">
+      </div>
+      <button onclick="login()">Login</button>
+      <p style="text-align: center; margin-top: 1rem;" id="registerPrompt">Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
+    </div>
+
+    <!-- Registration Section -->
+    <div class="card hidden" id="registerSection">
+      <h2 id="registerHeader">Student Registration</h2>
+      <div class="form-group">
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName" placeholder="Enter your full name">
+      </div>
+      <div class="form-group">
+        <label for="regEmail">Email</label>
+        <input type="email" id="regEmail" placeholder="Enter your email">
+      </div>
+      <div class="form-group" id="regRollGroup">
+        <label for="regRoll">Roll Number</label>
+        <input type="text" id="regRoll" placeholder="Enter your roll number">
+      </div>
+      <div class="flex-row" id="studentDetailsGroup">
+        <div class="form-group">
+          <label for="regYear">Year</label>
+          <select id="regYear">
+            <option value="">Select Year</option>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="regBranch">Branch</label>
+          <select id="regBranch">
+            <option value="">Select Branch</option>
+            <option value="CSE">CSE</option>
+            <option value="CSM">CSM</option>
+            <option value="MEC">MEC</option>
+            <option value="CIVIL">CIVIL</option>
+            <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
+            <option value="AID">AID</option>
+            <option value="AIML">AIML</option>
+            <option value="IT">IT</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="regPassword">Password</label>
+        <input type="password" id="regPassword" placeholder="Create a password">
+      </div>
+      <div class="form-group">
+        <label for="regConfirmPassword">Confirm Password</label>
+        <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+      </div>
+      <button class="success" onclick="register()">Register</button>
+      <button class="secondary" onclick="showLogin()" style="margin-top: 0.5rem;">Back to Login</button>
+    </div>
+
+    <!-- Student Dashboard Section -->
+    <div class="hidden" id="studentDashboard">
+      <div class="card">
+        <div class="flex-row" style="align-items: center; justify-content: space-between;">
+          <h2>Welcome, <span id="studentNameDisplay"></span></h2>
+          <button class="danger" onclick="logout()" style="width: auto;">Logout</button>
+        </div>
+        <p>Roll Number: <strong id="studentRollDisplay"></strong></p>
+        <p>Branch: <strong id="studentBranchDisplay"></strong> | Year: <strong id="studentYearDisplay"></strong></p>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('searchTab')">Search Books</div>
+        <div class="tab" onclick="switchTab('reservedTab')">My Reservations</div>
+        <div class="tab" onclick="switchTab('borrowedTab')">Borrowed Books</div>
+      </div>
+
+      <!-- Search Books Tab -->
+      <div class="tab-content active" id="searchTab">
+        <div class="card">
+          <div class="search-container">
+            <span class="search-icon"><i class="fas fa-search"></i></span>
+            <input type="text" id="searchBar" placeholder="Search for books by title, author, or ISBN..." oninput="filterBooks()">
+          </div>
+          <div id="bookList"></div>
+          <div id="noResults" class="hidden" style="text-align: center; padding: 2rem;">
+            <p>No books found matching your search.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Reservations Tab -->
+      <div class="tab-content" id="reservedTab">
+        <div class="card">
+          <h3>My Reservations</h3>
+          <div id="reservedBooksList">
+            <p>You have no reserved books at the moment.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Borrowed Books Tab -->
+      <div class="tab-content" id="borrowedTab">
+        <div class="card">
+          <h3>Borrowed Books</h3>
+          <div id="borrowedBooksList">
+            <p>You have no borrowed books at the moment.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Librarian Dashboard Section -->
+    <div class="hidden" id="librarianDashboard">
+      <div class="card">
+        <div class="flex-row" style="align-items: center; justify-content: space-between;">
+          <h2 class="admin-header">Welcome, Librarian <span id="librarianNameDisplay"></span></h2>
+          <button class="danger" onclick="logout()" style="width: auto;">Logout</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('libTransactionsTab')">Transactions</div>
+        <div class="tab" onclick="switchTab('libManageTab')">Manage Books</div>
+        <div class="tab" onclick="switchTab('libAnalyticsTab')">Analytics</div>
+      </div>
+
+      <!-- Transactions Tab -->
+      <div class="tab-content active" id="libTransactionsTab">
+        <div class="card">
+          <h3>Process Transactions</h3>
+          <div class="form-group">
+            <label for="transactionType">Transaction Type</label>
+            <select id="transactionType" onchange="updateTransactionUI()">
+              <option value="">Select transaction type</option>
+              <option value="checkout">Checkout Book</option>
+              <option value="return">Return Book</option>
+            </select>
+          </div>
+
+          <div id="checkoutTransactionUI" class="hidden">
+            <div class="form-group">
+              <label for="checkoutStudentQR">Scan Student QR Code</label>
+              <input type="text" id="checkoutStudentQR" placeholder="Or enter student ID manually">
+            </div>
+            <div class="form-group">
+              <label for="checkoutBookQR">Scan Book QR Code</label>
+              <input type="text" id="checkoutBookQR" placeholder="Or enter book ID manually">
+            </div>
+            <div class="form-group">
+              <label for="checkoutDuration">Duration (days)</label>
+              <input type="number" id="checkoutDuration" value="14" min="1">
+            </div>
+            <button class="success" onclick="processCheckout()">Process Checkout</button>
+          </div>
+
+          <div id="returnTransactionUI" class="hidden">
+            <div class="form-group">
+              <label for="returnBookQR">Scan Book QR Code</label>
+              <input type="text" id="returnBookQR" placeholder="Or enter book ID manually">
+            </div>
+            <div class="form-group">
+              <label for="returnCondition">Book Condition</label>
+              <select id="returnCondition">
+                <option value="excellent">Excellent - Like new</option>
+                <option value="good" selected>Good - Minor wear</option>
+                <option value="fair">Fair - Noticeable wear</option>
+                <option value="poor">Poor - Significant damage</option>
+              </select>
+            </div>
+            <button class="success" onclick="processReturn()">Process Return</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Recent Transactions</h3>
+          <div class="transaction-log" id="transactionLog">
+            <div class="log-entry">
+              <span>No recent transactions</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manage Books Tab -->
+      <div class="tab-content" id="libManageTab">
+        <div class="card">
+          <h3>Add New Book</h3>
+          <div class="form-group">
+            <label for="newBookTitle">Title</label>
+            <input type="text" id="newBookTitle" placeholder="Enter book title">
+          </div>
+          <div class="form-group">
+            <label for="newBookAuthor">Author</label>
+            <input type="text" id="newBookAuthor" placeholder="Enter author name">
+          </div>
+          <div class="form-group">
+            <label for="newBookISBN">ISBN</label>
+            <input type="text" id="newBookISBN" placeholder="Enter ISBN">
+          </div>
+          <div class="flex-row">
+            <div class="form-group">
+              <label for="newBookYear">Publication Year</label>
+              <input type="number" id="newBookYear" placeholder="Enter publication year">
+            </div>
+            <div class="form-group">
+              <label for="newBookCopies">Number of Copies</label>
+              <input type="number" id="newBookCopies" value="1" min="1">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="newBookLocation">Location</label>
+            <input type="text" id="newBookLocation" placeholder="Enter shelf location">
+          </div>
+          <div class="form-group">
+            <label for="newBookBranch">Branch</label>
+            <select id="newBookBranch">
+              <option value="common">Common (All Branches)</option>
+              <option value="CSE">CSE</option>
+              <option value="CSM">CSM</option>
+              <option value="MEC">MEC</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="ECE">ECE</option>
+              <option value="EEE">EEE</option>
+              <option value="AID">AID</option>
+              <option value="AIML">AIML</option>
+              <option value="IT">IT</option>
+            </select>
+          </div>
+          <button class="success" onclick="addNewBook()">Add Book</button>
+        </div>
+
+        <div class="card">
+          <h3>Current Inventory</h3>
+          <div class="search-container">
+            <i class="search-icon">🔍</i>
+            <input type="text" id="libSearchBar" placeholder="Search books..." oninput="filterLibBooks()">
+          </div>
+          <div id="libBookList"></div>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div class="tab-content" id="libAnalyticsTab">
+        <div class="card">
+          <h3>Library Analytics</h3>
+          <div class="stats-container">
+            <div class="stat-card">
+              <div class="stat-value" id="totalBooksStat">0</div>
+              <div class="stat-label">Total Books</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="availableBooksStat">0</div>
+              <div class="stat-label">Available Books</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="borrowedBooksStat">0</div>
+              <div class="stat-label">Borrowed Books</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="overdueBooksStat">0</div>
+              <div class="stat-label">Overdue Books</div>
+            </div>
+          </div>
+
+
+          <div class="card">
+            <h4>Popular Books</h4>
+            <div class="chart-container">
+              <canvas id="popularBooksChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Details Modal (Student) -->
+    <div class="card hidden" id="bookDetailsModal">
+      <h2 id="bookDetailTitle"></h2>
+      <div class="flex-row">
+        <div>
+          <p><strong>Author:</strong> <span id="bookDetailAuthor"></span></p>
+          <p><strong>ISBN:</strong> <span id="bookDetailISBN"></span></p>
+          <p><strong>Year:</strong> <span id="bookDetailYear"></span></p>
+        </div>
+        <div>
+          <p><strong>Location:</strong> <span id="bookDetailLocation"></span></p>
+          <p><strong>Available Copies:</strong> <span id="bookDetailCopies" class="availability"></span></p>
+          <p><strong>Status:</strong> <span id="bookDetailStatus"></span></p>
+        </div>
+      </div>
+      <div id="bookActions">
+        <button class="success" id="reserveBtn" onclick="reserveBook()">Reserve Book</button>
+        <button class="secondary" onclick="closeBookDetails()">Cancel</button>
+      </div>
+
+
+      <div class="form-group">
+        <label for="bookRating">Rate this Book:</label>
+        <select id="bookRating" onchange="submitRating(this)">
+          <option value="">--Select--</option>
+          <option value="5">⭐⭐⭐⭐⭐</option>
+          <option value="4">⭐⭐⭐⭐</option>
+          <option value="3">⭐⭐⭐</option>
+          <option value="2">⭐⭐</option>
+          <option value="1">⭐</option>
+       </select>
+        <div class="rating-result" id="ratingResultMsg" style="margin-top: 5px; color: green;"></div>
+      </div>
+
+
+      <div id="reservationDetails" class="hidden">
+        <div class="qr-code">
+          <h3>Your Reservation QR Code</h3>
+          <img id="reservationQRImg" src="" alt="QR Code">
+          <p>Show this code at the library to check out your book</p>
+        </div>
+        <div class="timer">
+          <p>Time remaining to pick up: <span id="countdown">02:00:00</span></p>
+        </div>
+        <div class="notification warning">
+          <p>Please pick up your reserved book within 2 hours or the reservation will be canceled.</p>
+        </div>
+        <button class="danger" onclick="cancelReservation()">Cancel Reservation</button>
+      </div>
+    </div>
+
+    <!-- Transaction Result Modal -->
+    <div class="card hidden" id="transactionResultModal">
+      <h2 id="transactionResultTitle"></h2>
+      <div id="transactionResultContent"></div>
+      <button class="secondary" onclick="closeTransactionResult()" style="margin-top: 1rem;">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Database of books with more details
+    const bookDatabase = {
+      // Common books for all branches
+      common: [
+        {
+          id: "PHY101",
+          title: "Physics for Engineers",
+          author: "Paul A. Tipler",
+          isbn: "978-1429201241",
+          year: "2020",
+          location: "General Stack A1",
+          copies: 5,
+          available: 3,
+          totalBorrowed: 12
+        },
+        {
+          id: "CHEM101",
+          title: "Chemistry: The Central Science",
+          author: "Theodore L. Brown",
+          isbn: "978-0134414232",
+          year: "2017",
+          location: "General Stack A2",
+          copies: 4,
+          available: 1,
+          totalBorrowed: 8
+        },
+        {
+          id: "MATH101",
+          title: "Engineering Mathematics",
+          author: "K.A. Stroud",
+          isbn: "978-0831131876",
+          year: "2013",
+          location: "General Stack B1",
+          copies: 7,
+          available: 2,
+          totalBorrowed: 25
+        },
+        {
+          id: "MATH102",
+          title: "Engineering Mathematics Vol 2",
+          author: "K.A. Stroud",
+          isbn: "978-0831131883",
+          year: "2013",
+          location: "General Stack B1",
+          copies: 5,
+          available: 2,
+          reserved: 1,
+          totalBorrowed: 18
+        }
+      ],
+      // Branch-specific books
+      CSE: [
+        {
+          id: "CSE201",
+          title: "Data Structures and Algorithms",
+          author: "Thomas H. Cormen",
+          isbn: "978-0262033848",
+          year: "2009",
+          location: "CSE Section C1",
+          copies: 3,
+          available: 1,
+          totalBorrowed: 15
+        },
+        {
+          id: "CSE202",
+          title: "Computer Organization and Design",
+          author: "David A. Patterson",
+          isbn: "978-0123747501",
+          year: "2013",
+          location: "CSE Section C2",
+          copies: 4,
+          available: 2,
+          totalBorrowed: 10
+        }
+      ],
+      CSM: [
+        {
+          id: "CSM201",
+          title: "Machine Learning Fundamentals",
+          author: "Andrew Ng",
+          isbn: "978-0134845623",
+          year: "2018",
+          location: "CSM Section D1",
+          copies: 2,
+          available: 0,
+          totalBorrowed: 7
+        }
+      ]
+    };
+
+    // User database
+    const userDatabase = {
+      students: [
+        {
+          id: "STU001",
+          name: "Rahul Sharma",
+          email: "student@college.edu",
+          password: "password123",
+          rollNumber: "CS2021001",
+          year: "2",
+          branch: "CSE",
+          borrowedBooks: ["CSE201", "PHY101"],
+          reservedBooks: ["MATH102"]
+        }
+      ],
+      librarians: [
+        {
+          id: "LIB001",
+          name: "Library Admin",
+          email: "librarian@college.edu",
+          password: "lib123",
+          accessLevel: "full"
+        }
+      ]
+    };
+
+    // Transaction log
+    let transactionLog = [
+      {
+        id: "TXN001",
+        type: "checkout",
+        bookId: "CSE201",
+        userId: "STU001",
+        date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+        dueDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days overdue
+        status: "overdue"
+      },
+      {
+        id: "TXN002",
+        type: "checkout",
+        bookId: "PHY101",
+        userId: "STU001",
+        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
+        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // due in 2 days
+        status: "active"
+      },
+      {
+        id: "TXN003",
+        type: "return",
+        bookId: "MATH101",
+        userId: "STU002",
+        date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
+        condition: "good"
+      }
+    ];
+
+    // Current user data
+    let currentUser = null;
+    let userType = "student"; // Default to student view
+    let selectedBook = null;
+    let borrowingChart = null;
+    let popularBooksChart = null;
+    let ratingChartInstance = null;
+
+
+    // Initialize the application
+    function init() {
+      // Check if user is already logged in (from localStorage)
+      const savedUser = localStorage.getItem('libraryUser');
+      if (savedUser) {
+        currentUser = JSON.parse(savedUser);
+        userType = currentUser.type || "student";
+        updateUserTypeUI();
+        showDashboard();
+        if (userType === "librarian") {
+          loadLibrarianDashboard();
+        } else {
+          loadStudentBooks();
+        }
+      } else {
+        updateUserTypeUI();
+      }
+    }
+
+    // Select user type (student or librarian)
+    function selectUserType(type) {
+      userType = type;
+      updateUserTypeUI();
+    }
+
+    // Update UI based on user type
+    function updateUserTypeUI() {
+      // Update buttons
+      document.querySelectorAll('.user-type-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`.user-type-btn[onclick="selectUserType('${userType}')"]`).classList.add('active');
+      
+      document.getElementById('registerPrompt').style.display = "block";
+
+      if (userType === "librarian") {
+        document.getElementById('loginHeader').textContent = "Librarian Login";
+        document.getElementById('registerHeader').textContent = "Librarian Registration";
+        document.getElementById('regRollGroup').classList.add('hidden');
+        document.getElementById('studentDetailsGroup').classList.add('hidden');
+        document.getElementById('mainHeader').classList.add('admin-header');
+      } else {
+         document.getElementById('loginHeader').textContent = "Student Login";
+         document.getElementById('registerHeader').textContent = "Student Registration";
+         document.getElementById('regRollGroup').classList.remove('hidden');
+         document.getElementById('studentDetailsGroup').classList.remove('hidden');
+         document.getElementById('mainHeader').classList.remove('admin-header');
+      }
+  }
+
+  // Login function
+    function login() {
+      const email = document.getElementById('userEmail').value;
+      const password = document.getElementById('userPassword').value;
+      
+      // Simple validation
+      if (!email || !password) {
+        alert('Please enter both email and password');
+        return;
+      }
+      
+      // Find user in database
+      let user = null;
+      if (userType === "librarian") {
+        user = userDatabase.librarians.find(u => u.email === email && u.password === password);
+      } else {
+        user = userDatabase.students.find(u => u.email === email && u.password === password);
+      }
+      
+      if (user) {
+        currentUser = {
+          ...user,
+          type: userType
+        };
+        
+        // Save to localStorage
+        localStorage.setItem('libraryUser', JSON.stringify(currentUser));
+        
+        showDashboard();
+        if (userType === "librarian") {
+          loadLibrarianDashboard();
+        } else {
+          loadStudentBooks();
+        }
+      } else {
+        alert('Invalid credentials. Try:\nStudent: student@college.edu / password123\nLibrarian: librarian@college.edu / lib123');
+      }
+    }
+
+    // Register function
+    function register() {
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      const confirmPassword = document.getElementById('regConfirmPassword').value;
+      
+      // Validation
+      if (!name || !email || !password || !confirmPassword) {
+        alert('Please fill in all fields');
+        return;
+      }
+      
+      if (password !== confirmPassword) {
+        alert('Passwords do not match');
+        return;
+      }
+      
+      // Additional validation for students
+      if (userType === "student") {
+        const roll = document.getElementById('regRoll').value;
+        const year = document.getElementById('regYear').value;
+        const branch = document.getElementById('regBranch').value;
+        
+        if (!roll || !year || !branch) {
+          alert('Please fill in all student details');
+          return;
+        }
+      }
+      
+      // Check if email already exists
+      if (userDatabase.students.some(u => u.email === email) || 
+          userDatabase.librarians.some(u => u.email === email)) {
+        alert('Email already registered');
+        return;
+      }
+      
+      // Create new user
+      if (userType === "librarian") {
+        const newLibrarian = {
+          id: "LIB" + (userDatabase.librarians.length + 1).toString().padStart(3, '0'),
+          name: name,
+          email: email,
+          password: password,
+          accessLevel: "full"
+        };
+        userDatabase.librarians.push(newLibrarian);
+        currentUser = {
+          ...newLibrarian,
+          type: "librarian"
+        };
+      } else {
+        const roll = document.getElementById('regRoll').value;
+        const year = document.getElementById('regYear').value;
+        const branch = document.getElementById('regBranch').value;
+        
+        const newStudent = {
+          id: "STU" + (userDatabase.students.length + 1).toString().padStart(3, '0'),
+          name: name,
+          email: email,
+          password: password,
+          rollNumber: roll,
+          year: year,
+          branch: branch,
+          borrowedBooks: [],
+          reservedBooks: []
+        };
+        userDatabase.students.push(newStudent);
+        currentUser = {
+          ...newStudent,
+          type: "student"
+        };
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('libraryUser', JSON.stringify(currentUser));
+      
+      showDashboard();
+      if (userType === "librarian") {
+        loadLibrarianDashboard();
+      } else {
+        loadStudentBooks();
+      }
+      alert('Registration successful!');
+    }
+
+    // Logout function
+    function logout() {
+      currentUser = null;
+      localStorage.removeItem('libraryUser');
+      showLogin();
+    }
+
+// Show login form
+    function showLogin() {
+      document.getElementById('loginSection').classList.remove('hidden');
+      document.getElementById('registerSection').classList.add('hidden');
+      document.getElementById('studentDashboard').classList.add('hidden');
+      document.getElementById('librarianDashboard').classList.add('hidden');
+      document.getElementById('bookDetailsModal').classList.add('hidden');
+      document.getElementById('transactionResultModal').classList.add('hidden');
+      
+      // Reset form fields
+      document.getElementById('userEmail').value = '';
+      document.getElementById('userPassword').value = '';
+    }
+
+    // Show registration form
+    function showRegister() {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('registerSection').classList.remove('hidden');
+      
+      // Reset form fields
+      document.getElementById('regName').value = '';
+      document.getElementById('regEmail').value = '';
+      document.getElementById('regPassword').value = '';
+      document.getElementById('regConfirmPassword').value = '';
+      if (userType === "student") {
+        document.getElementById('regRoll').value = '';
+        document.getElementById('regYear').value = '';
+        document.getElementById('regBranch').value = '';
+      }
+    }
+
+    // Show dashboard based on user type
+    function showDashboard() {
+      document.getElementById('loginSection').classList.add('hidden');
+      document.getElementById('registerSection').classList.add('hidden');
+      document.getElementById('userTypeSelector').classList.add('hidden');
+      
+      if (userType === "librarian") {
+        document.getElementById('librarianDashboard').classList.remove('hidden');
+        document.getElementById('studentDashboard').classList.add('hidden');
+        document.getElementById('librarianNameDisplay').textContent = currentUser.name;
+      } else {
+        document.getElementById('studentDashboard').classList.remove('hidden');
+        document.getElementById('librarianDashboard').classList.add('hidden');
+        document.getElementById('studentNameDisplay').textContent = currentUser.name;
+        document.getElementById('studentRollDisplay').textContent = currentUser.rollNumber;
+        document.getElementById('studentBranchDisplay').textContent = currentUser.branch;
+        document.getElementById('studentYearDisplay').textContent = currentUser.year;
+      }
+    }
+
+    // Load books for student view
+    function loadStudentBooks() {
+      const bookList = document.getElementById('bookList');
+      bookList.innerHTML = '';
+      
+      // Get all books from all branches and common
+      let allBooks = [...bookDatabase.common];
+      
+      // Add branch-specific books
+      if (bookDatabase[currentUser.branch]) {
+        allBooks = [...allBooks, ...bookDatabase[currentUser.branch]];
+      }
+      
+      if (allBooks.length === 0) {
+        document.getElementById('noResults').classList.remove('hidden');
+        return;
+      }
+  
+      document.getElementById('noResults').classList.add('hidden');
+
+
+
+      // Render books
+      allBooks.forEach(book => {
+        const bookItem = document.createElement('div');
+        bookItem.className = 'book-item';
+
+        const avgRatings = getAverageRatings();
+        const rating = avgRatings[book.id] || null;
+        
+        let availabilityClass = '';
+        let availabilityText = '';
+
+        
+        if (book.available === 0) {
+          availabilityClass = 'unavailable';
+          availabilityText = 'Not Available';
+        } else if (book.available < 2) {
+          availabilityClass = 'limited';
+          availabilityText = 'Limited Availability';
+        } else {
+          availabilityClass = 'available';
+          availabilityText = 'Available';
+        }
+        
+        bookItem.innerHTML = `
+          <h3>${book.title}</h3>
+          <p>${book.author}</p>
+          ${rating ? `<p>⭐ Average Rating: ${rating} / 5</p>` : ''}
+          <span class="availability ${availabilityClass}">${availabilityText}</span>
+          <button class="secondary" style="width: auto; margin-left: 1rem;" onclick="viewBookDetails('${book.id}')">View Details</button>
+        `;
+        
+        bookList.appendChild(bookItem);
+      });
+
+
+
+      
+      // Load reserved books
+      loadReservedBooks();
+      
+      // Load borrowed books
+      loadBorrowedBooks();
+    }
+
+    // Load reserved books for the current student
+    function loadReservedBooks() {
+      if (!currentUser || currentUser.type !== "student") return;
+      
+      const reservedBooksList = document.getElementById('reservedBooksList');
+      reservedBooksList.innerHTML = '';
+      
+      if (!currentUser.reservedBooks || currentUser.reservedBooks.length === 0) {
+        reservedBooksList.innerHTML = '<p>You have no reserved books at the moment.</p>';
+        return;
+      }
+      
+      currentUser.reservedBooks.forEach(bookId => {
+        // Find the book in the database
+        let book = null;
+        for (const branch in bookDatabase) {
+          const foundBook = bookDatabase[branch].find(b => b.id === bookId);
+          if (foundBook) {
+            book = foundBook;
+            break;
+          }
+        }
+        
+        if (!book) return;
+        
+        const bookItem = document.createElement('div');
+        bookItem.className = 'book-item';
+        
+        bookItem.innerHTML = `
+          <h3>${book.title} <span class="status-badge status-reserved">Reserved</span></h3>
+          <p><strong>Author:</strong> ${book.author}</p>
+          <p><strong>ISBN:</strong> ${book.isbn}</p>
+          <p><strong>Pick-up Location:</strong> ${book.location}</p>
+          <button class="warning" style="width: auto;" onclick="cancelReservationFromList('${book.id}')">Cancel Reservation</button>
+        `;
+        
+        reservedBooksList.appendChild(bookItem);
+      });
+    }
+
+    // Load borrowed books for the current student
+    function loadBorrowedBooks() {
+      if (!currentUser || currentUser.type !== "student") return;
+      
+      const borrowedBooksList = document.getElementById('borrowedBooksList');
+      borrowedBooksList.innerHTML = '';
+      
+      if (!currentUser.borrowedBooks || currentUser.borrowedBooks.length === 0) {
+        borrowedBooksList.innerHTML = '<p>You have no borrowed books at the moment.</p>';
+        return;
+      }
+      
+      currentUser.borrowedBooks.forEach(bookId => {
+        // Find the book in the database
+        let book = null;
+        for (const branch in bookDatabase) {
+          const foundBook = bookDatabase[branch].find(b => b.id === bookId);
+          if (foundBook) {
+            book = foundBook;
+            break;
+          }
+        }
+        
+        if (!book) return;
+        
+        // Find the transaction for this book
+        const transaction = transactionLog.find(t => 
+          t.bookId === bookId && 
+          t.userId === currentUser.id && 
+          t.type === "checkout" &&
+          t.status === "active"
+        );
+        
+        let dueDate = "Unknown";
+        let status = "borrowed";
+        
+        if (transaction) {
+          dueDate = transaction.dueDate.toLocaleDateString();
+          if (transaction.status === "overdue") {
+            status = "overdue";
+          }
+        }
+        
+        const bookItem = document.createElement('div');
+        bookItem.className = 'book-item';
+        
+        bookItem.innerHTML = `
+          <h3>${book.title} <span class="status-badge status-${status}">${status === "overdue" ? "Overdue" : "Borrowed"}</span></h3>
+          <p><strong>Author:</strong> ${book.author}</p>
+          <p><strong>ISBN:</strong> ${book.isbn}</p>
+          <p><strong>Due Date:</strong> ${dueDate}</p>
+          ${status === "overdue" ? '<p class="notification danger">This book is overdue. Please return it as soon as possible to avoid fines.</p>' : ''}
+        `;
+        
+        borrowedBooksList.appendChild(bookItem);
+      });
+    }
+
+    // Filter books based on search input
+    function filterBooks() {
+      const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+      const bookItems = document.getElementById('bookList').children;
+      let matches = 0;
+      
+      for (const bookItem of bookItems) {
+        const title = bookItem.querySelector('h3').textContent.toLowerCase();
+        const author = bookItem.querySelector('p').textContent.toLowerCase();
+        
+        if (title.includes(searchTerm) || author.includes(searchTerm)) {
+          bookItem.style.display = 'block';
+          matches++;
+        } else {
+          bookItem.style.display = 'none';
+        }
+      }
+      
+      if (matches === 0) {
+        document.getElementById('noResults').classList.remove('hidden');
+      } else {
+        document.getElementById('noResults').classList.add('hidden');
+      }
+    }
+
+    // View book details
+    function viewBookDetails(bookId) {
+      // Find the book in the database
+      let book = null;
+      for (const branch in bookDatabase) {
+        const foundBook = bookDatabase[branch].find(b => b.id === bookId);
+        if (foundBook) {
+          book = foundBook;
+          break;
+        }
+      }
+      
+      if (!book) return;
+      
+      selectedBook = book;
+      
+      // Fill in book details
+      document.getElementById('bookDetailTitle').textContent = book.title;
+      document.getElementById('bookDetailAuthor').textContent = book.author;
+      document.getElementById('bookDetailISBN').textContent = book.isbn;
+      document.getElementById('bookDetailYear').textContent = book.year;
+      document.getElementById('bookDetailLocation').textContent = book.location;
+      
+      // Set availability status
+      const copiesElement = document.getElementById('bookDetailCopies');
+      copiesElement.textContent = `${book.available} of ${book.copies}`;
+      
+      if (book.available === 0) {
+        copiesElement.className = 'availability unavailable';
+        document.getElementById('bookDetailStatus').textContent = 'Not Available';
+        document.getElementById('reserveBtn').disabled = true;
+      } else if (book.available < 2) {
+        copiesElement.className = 'availability limited';
+        document.getElementById('bookDetailStatus').textContent = 'Limited Availability';
+        document.getElementById('reserveBtn').disabled = false;
+      } else {
+        copiesElement.className = 'availability available';
+        document.getElementById('bookDetailStatus').textContent = 'Available';
+        document.getElementById('reserveBtn').disabled = false;
+      }
+      
+      // Show book details modal
+      document.getElementById('bookDetailsModal').classList.remove('hidden');
+      document.getElementById('bookActions').classList.remove('hidden');
+      document.getElementById('reservationDetails').classList.add('hidden');
+
+
+      // Preload existing rating if it exists
+      const ratingKey = `rating_${book.id}_${currentUser.id}`;
+      const savedRating = localStorage.getItem(ratingKey);
+      if (savedRating) {
+       document.getElementById('bookRating').value = savedRating;
+       document.getElementById('ratingResultMsg').innerText =
+    `  You rated "${book.title}" with ${savedRating} star(s)!`;
+      } else {
+        document.getElementById('bookRating').value = '';
+        document.getElementById('ratingResultMsg').innerText = '';
+      }
+
+    }
+
+    // Close book details modal
+    function closeBookDetails() {
+      document.getElementById('bookDetailsModal').classList.add('hidden');
+    }
+
+    // Reserve a book
+    function reserveBook() {
+      if (!selectedBook || selectedBook.available <= 0) return;
+      
+      // Update book available count
+      selectedBook.available--;
+      selectedBook.reserved = (selectedBook.reserved || 0) + 1;
+      
+      // Add to student's reserved books
+      if (!currentUser.reservedBooks) {
+        currentUser.reservedBooks = [];
+      }
+      
+      currentUser.reservedBooks.push(selectedBook.id);
+      
+      // Save to localStorage
+      localStorage.setItem('libraryUser', JSON.stringify(currentUser));
+      
+      // Show reservation details
+      document.getElementById('bookActions').classList.add('hidden');
+      document.getElementById('reservationDetails').classList.remove('hidden');
+      
+      // Generate QR code URL (placeholder)
+      document.getElementById('reservationQRImg').src = "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" + encodeURIComponent("BOOK:" + selectedBook.id + ";USER:" + currentUser.id);
+      
+      // Start countdown
+      startCountdown();
+      
+      // Add to transaction log
+      const transaction = {
+        id: "TXN" + (transactionLog.length + 1).toString().padStart(3, '0'),
+        type: "reservation",
+        bookId: selectedBook.id,
+        userId: currentUser.id,
+        date: new Date(),
+        expiryDate: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
+        status: "active"
+      };
+      
+      transactionLog.push(transaction);
+    }
+
+    // Cancel reservation
+    function cancelReservation() {
+      if (!selectedBook) return;
+      
+      cancelReservationById(selectedBook.id);
+      closeBookDetails();
+    }
+
+    // Cancel reservation from list
+    function cancelReservationFromList(bookId) {
+      cancelReservationById(bookId);
+      loadReservedBooks();
+    }
+
+    // Cancel reservation by book ID
+    function cancelReservationById(bookId) {
+      // Find the book in the database
+      let book = null;
+      for (const branch in bookDatabase) {
+        const foundBook = bookDatabase[branch].find(b => b.id === bookId);
+        if (foundBook) {
+          book = foundBook;
+          break;
+        }
+      }
+      
+      if (!book) return;
+      
+      // Update book available count
+      book.available++;
+      if (book.reserved) book.reserved--;
+      
+      // Remove from student's reserved books
+      currentUser.reservedBooks = currentUser.reservedBooks.filter(id => id !== bookId);
+      
+      // Save to localStorage
+      localStorage.setItem('libraryUser', JSON.stringify(currentUser));
+      
+      // Update transaction log
+      const transactionIndex = transactionLog.findIndex(t => 
+        t.bookId === bookId && 
+        t.userId === currentUser.id && 
+        t.type === "reservation" &&
+        t.status === "active"
+      );
+      
+      if (transactionIndex >= 0) {
+        transactionLog[transactionIndex].status = "canceled";
+      }
+    }
+
+    // Start countdown timer for reservation
+    function startCountdown() {
+      let hours = 2;
+      let minutes = 0;
+      let seconds = 0;
+      
+      const countdownElement = document.getElementById('countdown');
+      
+      const timer = setInterval(() => {
+        if (seconds > 0) {
+          seconds--;
+        } else if (minutes > 0) {
+          minutes--;
+          seconds = 59;
+        } else if (hours > 0) {
+          hours--;
+          minutes = 59;
+          seconds = 59;
+        } else {
+          clearInterval(timer);
+          cancelReservation();
+          alert('Your reservation has expired!');
+        }
+        
+        countdownElement.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      }, 1000);
+    }
+
+    // Switch tabs
+    function switchTab(tabId) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Deactivate all tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show selected tab content
+      document.getElementById(tabId).classList.add('active');
+      
+      // Activate selected tab
+      const tabs = document.querySelectorAll('.tab');
+      for (const tab of tabs) {
+        if (tab.getAttribute('onclick').includes(tabId)) {
+          tab.classList.add('active');
+          break;
+        }
+      }
+    }
+
+// Librarian Dashboard functions
+    function loadLibrarianDashboard() {
+      updateLibrarianStats();
+      loadLibrarianBookList();
+      loadTransactionLog();
+      initializeCharts();
+    }
+
+    // Update librarian statistics
+    function updateLibrarianStats() {
+      let totalBooks = 0;
+      let availableBooks = 0;
+      let borrowedBooks = 0;
+      let overdue = 0;
+      
+      // Count books in all branches
+      for (const branch in bookDatabase) {
+        bookDatabase[branch].forEach(book => {
+          totalBooks += book.copies;
+          availableBooks += book.available;
+        });
+      }
+      
+      borrowedBooks = totalBooks - availableBooks;
+      
+      // Count overdue books from transaction log
+      overdue = transactionLog.filter(t => t.status === "overdue").length;
+      
+      // Update UI
+      document.getElementById('totalBooksStat').textContent = totalBooks;
+      document.getElementById('availableBooksStat').textContent = availableBooks;
+      document.getElementById('borrowedBooksStat').textContent = borrowedBooks;
+      document.getElementById('overdueBooksStat').textContent = overdue;
+    }
+
+
+
+
+    function initializeCharts() {
+     updateRatingsAnalytics();                     // ⭐ Top Rated Books chart
+     renderBorrowingTrendsChart(transactionLog);  // 📈 Borrowing Trends chart
+    }
+
+
+
+
+    function loadLibrarianBookList() {
+      const bookList = document.getElementById('libBookList');
+      bookList.innerHTML = '';
+
+      const avgRatings = getAverageRatings(); // Only call once
+
+      for (const branch in bookDatabase) {
+        const branchHeader = document.createElement('h4');
+        branchHeader.textContent = branch === 'common' ? 'Common Books' : `${branch} Branch Books`;
+        bookList.appendChild(branchHeader);
+
+        bookDatabase[branch].forEach(book => {
+          const bookItem = document.createElement('div');
+          bookItem.className = 'book-item';
+
+          const rating = avgRatings[book.id];
+          let ratingHTML = '';
+          if (rating) {
+            ratingHTML = `<p>⭐ Average Rating: ${rating} / 5</p>`;
+          }
+
+          let availabilityClass = '';
+          if (book.available === 0) {
+            availabilityClass = 'unavailable';
+          } else if (book.available < 2) {
+            availabilityClass = 'limited';
+          } else {
+            availabilityClass = 'available';
+          }
+
+          bookItem.innerHTML = `
+            ${ratingHTML}
+            <div class="flex-row" style="align-items: center;">
+              <div style="flex: 3;">
+                <h3>${book.title}</h3>
+                <p>${book.author} (${book.year})</p>
+              </div>
+              <div style="flex: 1; text-align: center;">
+                <span class="availability ${availabilityClass}">${book.available}/${book.copies}</span>
+              </div>
+              <div style="flex: 1;">
+                <button class="secondary" style="width: auto;" onclick="editBook('${book.id}', '${branch}')">Edit</button>
+              </div>
+            </div>
+          `;
+
+          bookList.appendChild(bookItem);
+        });
+      }
+    }
+
+    // Load transaction log
+    function loadTransactionLog() {
+      const logElement = document.getElementById('transactionLog');
+      logElement.innerHTML = '';
+      
+      if (transactionLog.length === 0) {
+        logElement.innerHTML = '<div class="log-entry"><span>No transactions recorded</span></div>';
+        return;
+      }
+      
+      // Sort transactions by date (newest first)
+      const sortedLog = [...transactionLog].sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      sortedLog.forEach(transaction => {
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        
+        let actionClass = '';
+        let actionText = '';
+        
+        switch (transaction.type) {
+          case 'checkout':
+            actionText = 'Checkout';
+            actionClass = 'log-success';
+            break;
+          case 'return':
+            actionText = 'Return';
+            actionClass = 'log-success';
+            break;
+          case 'reservation':
+            actionText = 'Reservation';
+            actionClass = 'log-warning';
+            break;
+          default:
+            actionText = transaction.type;
+        }
+        
+        if (transaction.status === 'overdue') {
+          actionClass = 'log-danger';
+        } else if (transaction.status === 'canceled') {
+          actionClass = 'log-warning';
+        }
+        
+        // Find book and user info
+        let bookTitle = 'Unknown Book';
+        let userName = 'Unknown User';
+        
+        // Find book
+        for (const branch in bookDatabase) {
+          const book = bookDatabase[branch].find(b => b.id === transaction.bookId);
+          if (book) {
+            bookTitle = book.title;
+            break;
+          }
+        }
+        
+        // Find user
+        const student = userDatabase.students.find(s => s.id === transaction.userId);
+        if (student) {
+          userName = student.name;
+        }
+        
+        logEntry.innerHTML = `
+          <div>
+            <span class="log-action ${actionClass}">${actionText}</span>
+            <strong>${bookTitle}</strong> by ${userName}
+          </div>
+          <div>
+            ${new Date(transaction.date).toLocaleString()}
+          </div>
+        `;
+        
+        logElement.appendChild(logEntry);
+      });
+    }
+
+    // Update transaction UI based on selection
+    function updateTransactionUI() {
+      const transactionType = document.getElementById('transactionType').value;
+      
+      document.getElementById('checkoutTransactionUI').classList.add('hidden');
+      document.getElementById('returnTransactionUI').classList.add('hidden');
+      
+      if (transactionType === 'checkout') {
+        document.getElementById('checkoutTransactionUI').classList.remove('hidden');
+      } else if (transactionType === 'return') {
+        document.getElementById('returnTransactionUI').classList.remove('hidden');
+      }
+    }
+
+    // Process checkout transaction
+    function processCheckout() {
+      const studentId = document.getElementById('checkoutStudentQR').value;
+      const bookId = document.getElementById('checkoutBookQR').value;
+      const duration = parseInt(document.getElementById('checkoutDuration').value) || 14;
+      
+      if (!studentId || !bookId) {
+        showTransactionResult('Error', 'Please enter both student ID and book ID.');
+        return;
+      }
+      
+      // Find student
+      const student = userDatabase.students.find(s => s.id === studentId);
+      if (!student) {
+        showTransactionResult('Student Not Found', 'The student ID is invalid.');
+        return;
+      }
+      
+      // Find book
+      let book = null;
+      let bookBranch = '';
+      for (const branch in bookDatabase) {
+        const foundBook = bookDatabase[branch].find(b => b.id === bookId);
+        if (foundBook) {
+          book = foundBook;
+          bookBranch = branch;
+          break;
+        }
+      }
+      
+      if (!book) {
+        showTransactionResult('Book Not Found', 'The book ID is invalid.');
+        return;
+      }
+      
+      // Check if book is available
+      if (book.available <= 0) {
+        showTransactionResult('Book Not Available', 'This book is currently not available for checkout.');
+        return;
+      }
+      
+      // Update book availability
+      book.available--;
+      
+      // Add book to student's borrowed books
+      if (!student.borrowedBooks) {
+        student.borrowedBooks = [];
+      }
+      student.borrowedBooks.push(book.id);
+      
+      // Remove from reserved books if applicable
+      if (student.reservedBooks && student.reservedBooks.includes(book.id)) {
+        student.reservedBooks = student.reservedBooks.filter(id => id !== book.id);
+        if (book.reserved) book.reserved--;
+      }
+      
+      // Create transaction record
+      const dueDate = new Date();
+      dueDate.setDate(dueDate.getDate() + duration);
+      
+      const transaction = {
+        id: "TXN" + (transactionLog.length + 1).toString().padStart(3, '0'),
+        type: "checkout",
+        bookId: book.id,
+        userId: student.id,
+        date: new Date(),
+        dueDate: dueDate,
+        status: "active",
+        duration: duration
+      };
+      
+      transactionLog.push(transaction);
+      
+      // Update UI
+      loadTransactionLog();
+      updateLibrarianStats();
+      
+      // Show success message
+      showTransactionResult('Checkout Successful', `
+        <p><strong>${book.title}</strong> has been checked out to <strong>${student.name}</strong>.</p>
+        <p>Due Date: ${dueDate.toLocaleDateString()}</p>
+      `);
+      
+      // Reset form
+      document.getElementById('checkoutStudentQR').value = '';
+      document.getElementById('checkoutBookQR').value = '';
+    }
+
+    // Process return transaction
+    function processReturn() {
+      const bookId = document.getElementById('returnBookQR').value;
+      const condition = document.getElementById('returnCondition').value;
+      
+      if (!bookId) {
+        showTransactionResult('Error', 'Please enter a book ID.');
+        return;
+      }
+      
+      // Find book
+      let book = null;
+      let bookBranch = '';
+      for (const branch in bookDatabase) {
+        const foundBook = bookDatabase[branch].find(b => b.id === bookId);
+        if (foundBook) {
+          book = foundBook;
+          bookBranch = branch;
+          break;
+        }
+      }
+      
+      if (!book) {
+        showTransactionResult('Book Not Found', 'The book ID is invalid.');
+        return;
+      }
+      
+      // Find the checkout transaction
+      const checkoutTransaction = transactionLog.find(t => 
+        t.bookId === bookId && 
+        t.type === "checkout" &&
+        t.status === "active"
+      );
+      
+      if (!checkoutTransaction) {
+        showTransactionResult('Error', 'No active checkout found for this book.');
+        return;
+      }
+      
+      // Find the student
+      const student = userDatabase.students.find(s => s.id === checkoutTransaction.userId);
+      if (!student) {
+        showTransactionResult('Error', 'Student information not found.');
+        return;
+      }
+      
+      // Update book availability
+      book.available++;
+      
+      // Remove book from student's borrowed books
+      if (student.borrowedBooks) {
+        student.borrowedBooks = student.borrowedBooks.filter(id => id !== book.id);
+      }
+      
+      // Update checkout transaction status
+      checkoutTransaction.status = "returned";
+      
+      // Create return transaction
+      const transaction = {
+        id: "TXN" + (transactionLog.length + 1).toString().padStart(3, '0'),
+        type: "return",
+        bookId: book.id,
+        userId: student.id,
+        date: new Date(),
+        condition: condition,
+        relatedTransaction: checkoutTransaction.id
+      };
+      
+      transactionLog.push(transaction);
+      
+      // Check if book is overdue
+      const isOverdue = new Date() > new Date(checkoutTransaction.dueDate);
+      let fineAmount = 0;
+      
+      if (isOverdue) {
+        // Calculate days overdue
+        const dueDate = new Date(checkoutTransaction.dueDate);
+        const today = new Date();
+        const diffTime = Math.abs(today - dueDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Calculate fine (Rs. 5 per day)
+        fineAmount = diffDays * 5;
+      }
+      
+      // Update UI
+      loadTransactionLog();
+      updateLibrarianStats();
+      
+      // Show success message
+      let resultMessage = `
+        <p><strong>${book.title}</strong> has been returned by <strong>${student.name}</strong>.</p>
+        <p>Book Condition: ${condition}</p>
+      `;
+      
+      if (fineAmount > 0) {
+        resultMessage += `
+          <div class="notification warning">
+            <p>This book was returned <strong>overdue</strong>.</p>
+            <p>Fine Amount: Rs. ${fineAmount}</p>
+          </div>
+        `;
+      }
+      
+      showTransactionResult('Return Processed', resultMessage);
+      
+      // Reset form
+      document.getElementById('returnBookQR').value = '';
+    }
+
+    // Show transaction result modal
+    function showTransactionResult(title, content) {
+      document.getElementById('transactionResultTitle').textContent = title;
+      document.getElementById('transactionResultContent').innerHTML = content;
+      document.getElementById('transactionResultModal').classList.remove('hidden');
+    }
+
+    // Close transaction result modal
+    function closeTransactionResult() {
+      document.getElementById('transactionResultModal').classList.add('hidden');
+    }
+
+    // Add new book
+    function addNewBook() {
+      const title = document.getElementById('newBookTitle').value;
+      const author = document.getElementById('newBookAuthor').value;
+      const isbn = document.getElementById('newBookISBN').value;
+      const year = document.getElementById('newBookYear').value;
+      const copies = parseInt(document.getElementById('newBookCopies').value) || 1;
+      const location = document.getElementById('newBookLocation').value;
+      const branch = document.getElementById('newBookBranch').value;
+      
+      // Validate inputs
+      if (!title || !author || !isbn || !year || !location) {
+        alert('Please fill in all required fields');
+        return;
+      }
+      
+      // Create new book object
+      const newBook = {
+        id: generateBookId(branch),
+        title: title,
+        author: author,
+        isbn: isbn,
+        year: year,
+        location: location,
+        copies: copies,
+        available: copies,
+        totalBorrowed: 0
+      };
+      
+      // Add to database
+      if (!bookDatabase[branch]) {
+        bookDatabase[branch] = [];
+      }
+      
+      bookDatabase[branch].push(newBook);
+      
+      // Update UI
+      loadLibrarianBookList();
+      updateLibrarianStats();
+      
+      // Clear form
+      document.getElementById('newBookTitle').value = '';
+      document.getElementById('newBookAuthor').value = '';
+      document.getElementById('newBookISBN').value = '';
+      document.getElementById('newBookYear').value = '';
+      document.getElementById('newBookCopies').value = '1';
+      document.getElementById('newBookLocation').value = '';
+      
+      alert(`Book "${title}" added successfully with ID: ${newBook.id}`);
+    }
+
+
+
+    // Generate a unique book ID based on branch
+    function generateBookId(branch) {
+      let prefix = branch === 'common' ? 'GEN' : branch;
+      let count = 1;
+      
+      if (bookDatabase[branch]) {
+        count = bookDatabase[branch].length + 1;
+      }
+      
+      return `${prefix}${count.toString().padStart(3, '0')}`;
+    }
+
+    // Edit book function
+    function editBook(bookId, branch) {
+      // Find the book
+      const book = bookDatabase[branch].find(b => b.id === bookId);
+      if (!book) return;
+      
+      // Simple prompt-based editing for demonstration
+      const newTitle = prompt('Edit Title:', book.title);
+      if (newTitle === null) return;
+      
+      const newAuthor = prompt('Edit Author:', book.author);
+      if (newAuthor === null) return;
+      
+      const newCopies = parseInt(prompt('Edit Total Copies:', book.copies));
+      if (isNaN(newCopies) || newCopies < book.copies - book.available) {
+        alert('Invalid number of copies. Cannot be less than borrowed copies.');
+        return;
+      }
+      
+      // Update book
+      book.title = newTitle;
+      book.author = newAuthor;
+      const additionalCopies = newCopies - book.copies;
+      book.available += additionalCopies;
+      book.copies = newCopies;
+      
+      // Update UI
+      loadLibrarianBookList();
+      updateLibrarianStats();
+      
+      alert(`Book "${book.title}" updated successfully.`);
+    }
+
+    // Filter books in librarian view
+    function filterLibBooks() {
+      const searchTerm = document.getElementById('libSearchBar').value.toLowerCase();
+      const bookItems = document.getElementById('libBookList').querySelectorAll('.book-item');
+      let matches = false;
+      
+      // Show/hide section headers based on search
+      const headers = document.getElementById('libBookList').querySelectorAll('h4');
+      
+      for (const header of headers) {
+        let showHeader = false;
+        let nextElement = header.nextElementSibling;
+        
+        while (nextElement && nextElement.tagName !== 'H4') {
+          if (nextElement.classList.contains('book-item')) {
+            const title = nextElement.querySelector('h3').textContent.toLowerCase();
+            const author = nextElement.querySelector('p').textContent.toLowerCase();
+            
+            if (title.includes(searchTerm) || author.includes(searchTerm)) {
+              nextElement.style.display = 'block';
+              showHeader = true;
+              matches = true;
+            } else {
+              nextElement.style.display = 'none';
+            }
+          }
+          nextElement = nextElement.nextElementSibling;
+        }
+        
+        header.style.display = showHeader ? 'block' : 'none';
+      }
+      
+      if (!matches && searchTerm) {
+        alert('No books found matching your search.');
+      }
+    }
+
+
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+    }
+
+    function submitRating(selectElement) {
+     const rating = parseInt(selectElement.value);
+     const resultDiv = document.getElementById('ratingResultMsg');
+
+     if (!currentUser || !selectedBook || !rating) return;
+
+     // Key format: rating_CSE201_STU001
+     const storageKey = `rating_${selectedBook.id}_${currentUser.id}`;
+     localStorage.setItem(storageKey, rating.toString());
+
+     resultDiv.innerText = `You rated "${selectedBook.title}" with ${rating} star(s)!`;
+ 
+     updateRatingsAnalytics(); // refresh analytics
+    }
+
+
+    function getAverageRatings() {
+     const ratingsMap = {};
+
+     for (let key in localStorage) {
+      if (key.startsWith("rating_")) {
+       const parts = key.split("_");
+       const bookId = parts[1];
+       const rating = parseInt(localStorage.getItem(key));
+
+       if (!ratingsMap[bookId]) ratingsMap[bookId] = [];
+        ratingsMap[bookId].push(rating);
+      }
+    }
+
+    const averages = {};
+    for (let bookId in ratingsMap) {
+     const sum = ratingsMap[bookId].reduce((a, b) => a + b, 0);
+     averages[bookId] = (sum / ratingsMap[bookId].length).toFixed(2);
+    }
+
+   return averages;
+  }
+
+
+
+function updateRatingsAnalytics() {
+  // Destroy existing chart if any
+  if (ratingChartInstance) {
+    ratingChartInstance.destroy();
+    ratingChartInstance = null;
+  }
+
+  const avgRatings = getAverageRatings();
+  const ratedBookIds = Object.keys(avgRatings);
+
+  const ratedTitles = ratedBookIds.map(id => {
+    for (const branch in bookDatabase) {
+      const book = bookDatabase[branch].find(b => b.id === id);
+      if (book) return book.title.length > 20 ? book.title.slice(0, 20) + '...' : book.title;
+    }
+    return id;
+  });
+
+  const ratingValues = ratedBookIds.map(id => parseFloat(avgRatings[id]));
+
+  const existingContainer = document.getElementById('ratingChartContainer');
+  if (existingContainer) existingContainer.remove();
+
+  const chartContainer = document.createElement('div');
+  chartContainer.className = 'card';
+  chartContainer.id = 'ratingChartContainer';
+  chartContainer.innerHTML = `
+    <h4>Top Rated Books</h4>
+    <div class="chart-container"><canvas id="ratingChart"></canvas></div>
+  `;
+  document.getElementById('libAnalyticsTab').appendChild(chartContainer);
+
+  const ctx = document.getElementById('ratingChart').getContext('2d');
+  ratingChartInstance = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ratedTitles,
+      datasets: [{
+        label: 'Avg Rating (Stars)',
+        data: ratingValues,
+        backgroundColor: 'rgba(255, 206, 86, 0.6)',
+        borderColor: 'rgba(255, 206, 86, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: 5
+        }
+      }
+    }
+  });
+}
+
+
+
+function renderLibraryAnalytics(transactionLog, bookDatabase) {
+  renderBorrowingTrendsChart(transactionLog);
+  renderRatingAnalyticsChart(bookDatabase);
+}
+
+
+// 📈 Borrowing Trends Chart (Line)
+function renderBorrowingTrendsChart(transactionLog) {
+  const months = [];
+  const checkouts = [];
+  const returns = [];
+
+  for (let i = 5; i >= 0; i--) {
+    const date = new Date();
+    date.setMonth(date.getMonth() - i);
+    months.push(date.toLocaleString('default', { month: 'short' }));
+
+    const monthStart = new Date(date.getFullYear(), date.getMonth(), 1);
+    const monthEnd = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+    const monthCheckouts = transactionLog.filter(t =>
+      t.type === 'checkout' &&
+      new Date(t.date) >= monthStart &&
+      new Date(t.date) <= monthEnd
+    ).length;
+
+    const monthReturns = transactionLog.filter(t =>
+      t.type === 'return' &&
+      new Date(t.date) >= monthStart &&
+      new Date(t.date) <= monthEnd
+    ).length;
+
+    checkouts.push(monthCheckouts);
+    returns.push(monthReturns);
+  }
+
+  const chartContainer = document.createElement('div');
+  chartContainer.className = 'card';
+  chartContainer.innerHTML = `
+    <h4>Borrowing Trends (Last 6 Months)</h4>
+    <div class="chart-container"><canvas id="borrowingChart"></canvas></div>
+  `;
+  document.getElementById('libAnalyticsTab').appendChild(chartContainer);
+
+  const ctx = document.getElementById('borrowingChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: months,
+      datasets: [
+        {
+          label: 'Checkouts',
+          data: checkouts,
+          borderColor: '#3498db',
+          backgroundColor: 'rgba(52, 152, 219, 0.2)',
+          tension: 0.4
+        },
+        {
+          label: 'Returns',
+          data: returns,
+          borderColor: '#2ecc71',
+          backgroundColor: 'rgba(46, 204, 113, 0.2)',
+          tension: 0.4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0 }
+        }
+      }
+    }
+  });
+}
+
+
+      
+      // Create popular books chart
+      const popularBooksCtx = document.getElementById('popularBooksChart').getContext('2d');
+      
+      // Get top 5 most borrowed books
+      const allBooks = [];
+      for (const branch in bookDatabase) {
+        bookDatabase[branch].forEach(book => {
+          allBooks.push(book);
+        });
+      }
+      
+      // Sort by total borrowed
+      allBooks.sort((a, b) => (b.totalBorrowed || 0) - (a.totalBorrowed || 0));
+      
+      const topBooks = allBooks.slice(0, 5);
+      const bookTitles = topBooks.map(book => book.title.length > 20 ? book.title.substring(0, 20) + '...' : book.title);
+      const borrowCounts = topBooks.map(book => book.totalBorrowed || 0);
+      
+      popularBooksChart = new Chart(popularBooksCtx, {
+        type: 'bar',
+        data: {
+          labels: bookTitles,
+          datasets: [
+            {
+              label: 'Times Borrowed',
+              data: borrowCounts,
+              backgroundColor: 'rgba(52, 152, 219, 0.7)',
+              borderColor: '#3498db',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0
+              }
+            }
+          }
+        }
+      });
+
+
+
+
+
+    // Initialize the application on page load
+    window.onload = init;
+   </script>
+</body>
+</html>
