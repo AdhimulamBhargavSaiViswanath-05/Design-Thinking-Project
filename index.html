@@ -21,7 +21,16 @@
       --border-radius: 8px;
       --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       --transition: all 0.3s ease;
-    }
+    
+@media (max-width: 600px) {
+  table, .flex-row {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+}
 
     * {
       box-sizing: border-box;
@@ -497,6 +506,92 @@
   </style>
   <!-- Chart.js for analytics -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+function togglePasswordVisibility(id) {
+  const input = document.getElementById(id);
+  if (input) {
+    if (input.type === "password") {
+      input.type = "text";
+    } else {
+      input.type = "password";
+    }
+  }
+}
+
+
+function loadUserList() {
+  const container = document.getElementById('userListContainer');
+  container.innerHTML = '';
+
+  if (userDatabase.students.length === 0) {
+    container.innerHTML = '<p>No students registered.</p>';
+    return;
+  }
+
+  const table = document.createElement('table');
+  table.style.width = '100%';
+  table.style.borderCollapse = 'collapse';
+  table.innerHTML = '<thead><tr><th>Name</th><th>Email</th><th>Roll</th><th>Branch</th><th>Year</th><th>Actions</th></tr></thead>';
+  const tbody = document.createElement('tbody');
+
+  userDatabase.students.forEach((student, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${student.name}</td>
+      <td>${student.email}</td>
+      <td>${student.rollNumber}</td>
+      <td>${student.branch}</td>
+      <td>${student.year}</td>
+      <td>
+        <button class="warning" onclick="editStudent(${index})">Edit</button>
+        <button class="danger" onclick="deleteStudent(${index})">Delete</button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+function deleteStudent(index) {
+  const confirmDelete = confirm("Are you sure you want to delete this student?");
+  if (confirmDelete) {
+    userDatabase.students.splice(index, 1);
+    localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+    loadUserList();
+    alert('Student deleted successfully.');
+  }
+}
+
+function editStudent(index) {
+  const student = userDatabase.students[index];
+  const newName = prompt("Enter new name:", student.name);
+  if (newName === null) return;
+  const newEmail = prompt("Enter new email:", student.email);
+  if (newEmail === null) return;
+  const newRoll = prompt("Enter new roll number:", student.rollNumber);
+  if (newRoll === null) return;
+
+  student.name = newName;
+  student.email = newEmail;
+  student.rollNumber = newRoll;
+
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  loadUserList();
+  alert("Student details updated.");
+}
+
+// Hook the function into dashboard load
+function loadLibrarianDashboard() {
+  updateLibrarianStats();
+  loadLibrarianBookList();
+  loadTransactionLog();
+  initializeCharts();
+  loadUserList(); // Load user list on dashboard load
+}
+</script>
 </head>
 <body>
   <div class="container">
@@ -525,7 +620,12 @@
       </div>
       <div class="form-group">
         <label for="userPassword">Password</label>
-        <input type="password" id="userPassword" placeholder="Enter your password">
+        
+<div style="position: relative;">
+  <input type="password" id="userPassword" placeholder="Enter your password">
+  <i class="fas fa-eye" onclick="togglePasswordVisibility('userPassword')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+</div>
+
       </div>
       <button onclick="login()">Login</button>
       <p style="text-align: center; margin-top: 1rem;" id="registerPrompt">Don't have an account? <a href="#" onclick="showRegister()">Register</a></p>
@@ -575,11 +675,21 @@
       </div>
       <div class="form-group">
         <label for="regPassword">Password</label>
-        <input type="password" id="regPassword" placeholder="Create a password">
+        
+<div style="position: relative;">
+  <input type="password" id="regPassword" placeholder="Create a password">
+  <i class="fas fa-eye" onclick="togglePasswordVisibility('regPassword')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+</div>
+
       </div>
       <div class="form-group">
         <label for="regConfirmPassword">Confirm Password</label>
-        <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+        
+<div style="position: relative;">
+  <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+  <i class="fas fa-eye" onclick="togglePasswordVisibility('regConfirmPassword')" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer;"></i>
+</div>
+
       </div>
       <button class="success" onclick="register()">Register</button>
       <button class="secondary" onclick="showLogin()" style="margin-top: 0.5rem;">Back to Login</button>
@@ -591,6 +701,7 @@
         <div class="flex-row" style="align-items: center; justify-content: space-between;">
           <h2>Welcome, <span id="studentNameDisplay"></span></h2>
           <button class="danger" onclick="logout()" style="width: auto;">Logout</button>
+          <button class="danger" onclick="resetSystem()">Reset System</button>
         </div>
         <p>Roll Number: <strong id="studentRollDisplay"></strong></p>
         <p>Branch: <strong id="studentBranchDisplay"></strong> | Year: <strong id="studentYearDisplay"></strong></p>
@@ -643,6 +754,7 @@
         <div class="flex-row" style="align-items: center; justify-content: space-between;">
           <h2 class="admin-header">Welcome, Librarian <span id="librarianNameDisplay"></span></h2>
           <button class="danger" onclick="logout()" style="width: auto;">Logout</button>
+          <button class="danger" onclick="resetSystem()">Reset System</button>
         </div>
       </div>
 
@@ -650,6 +762,8 @@
         <div class="tab active" onclick="switchTab('libTransactionsTab')">Transactions</div>
         <div class="tab" onclick="switchTab('libManageTab')">Manage Books</div>
         <div class="tab" onclick="switchTab('libAnalyticsTab')">Analytics</div>
+<div class="tab" onclick="switchTab('libUsersTab')">Manage Users</div>
+
       </div>
 
       <!-- Transactions Tab -->
@@ -767,7 +881,23 @@
         </div>
       </div>
 
-      <!-- Analytics Tab -->
+      
+<!-- Manage Users Tab -->
+<div class="tab-content" id="libUsersTab">
+  <div class="card">
+    <h3>Manage Registered Users</h3>
+<div class="search-container">
+  <i class="search-icon">🔍</i>
+  <input type="text" id="userSearchBar" placeholder="Search users..." oninput="filterUsersTable()">
+</div>
+
+    <div id="userListContainer">
+      <p>Loading users...</p>
+    </div>
+  </div>
+</div>
+
+<!-- Analytics Tab -->
       <div class="tab-content" id="libAnalyticsTab">
         <div class="card">
           <h3>Library Analytics</h3>
@@ -862,150 +992,17 @@
 
   <script>
     // Database of books with more details
-    const bookDatabase = {
-      // Common books for all branches
-      common: [
-        {
-          id: "PHY101",
-          title: "Physics for Engineers",
-          author: "Paul A. Tipler",
-          isbn: "978-1429201241",
-          year: "2020",
-          location: "General Stack A1",
-          copies: 5,
-          available: 3,
-          totalBorrowed: 12
-        },
-        {
-          id: "CHEM101",
-          title: "Chemistry: The Central Science",
-          author: "Theodore L. Brown",
-          isbn: "978-0134414232",
-          year: "2017",
-          location: "General Stack A2",
-          copies: 4,
-          available: 1,
-          totalBorrowed: 8
-        },
-        {
-          id: "MATH101",
-          title: "Engineering Mathematics",
-          author: "K.A. Stroud",
-          isbn: "978-0831131876",
-          year: "2013",
-          location: "General Stack B1",
-          copies: 7,
-          available: 2,
-          totalBorrowed: 25
-        },
-        {
-          id: "MATH102",
-          title: "Engineering Mathematics Vol 2",
-          author: "K.A. Stroud",
-          isbn: "978-0831131883",
-          year: "2013",
-          location: "General Stack B1",
-          copies: 5,
-          available: 2,
-          reserved: 1,
-          totalBorrowed: 18
-        }
-      ],
-      // Branch-specific books
-      CSE: [
-        {
-          id: "CSE201",
-          title: "Data Structures and Algorithms",
-          author: "Thomas H. Cormen",
-          isbn: "978-0262033848",
-          year: "2009",
-          location: "CSE Section C1",
-          copies: 3,
-          available: 1,
-          totalBorrowed: 15
-        },
-        {
-          id: "CSE202",
-          title: "Computer Organization and Design",
-          author: "David A. Patterson",
-          isbn: "978-0123747501",
-          year: "2013",
-          location: "CSE Section C2",
-          copies: 4,
-          available: 2,
-          totalBorrowed: 10
-        }
-      ],
-      CSM: [
-        {
-          id: "CSM201",
-          title: "Machine Learning Fundamentals",
-          author: "Andrew Ng",
-          isbn: "978-0134845623",
-          year: "2018",
-          location: "CSM Section D1",
-          copies: 2,
-          available: 0,
-          totalBorrowed: 7
-        }
-      ]
-    };
+    let bookDatabase = {};
 
     // User database
-    const userDatabase = {
-      students: [
-        {
-          id: "STU001",
-          name: "Rahul Sharma",
-          email: "student@college.edu",
-          password: "password123",
-          rollNumber: "CS2021001",
-          year: "2",
-          branch: "CSE",
-          borrowedBooks: ["CSE201", "PHY101"],
-          reservedBooks: ["MATH102"]
-        }
-      ],
-      librarians: [
-        {
-          id: "LIB001",
-          name: "Library Admin",
-          email: "librarian@college.edu",
-          password: "lib123",
-          accessLevel: "full"
-        }
-      ]
+    let userDatabase = {
+      students: [],
+      librarians: []
     };
 
+
     // Transaction log
-    let transactionLog = [
-      {
-        id: "TXN001",
-        type: "checkout",
-        bookId: "CSE201",
-        userId: "STU001",
-        date: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-        dueDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days overdue
-        status: "overdue"
-      },
-      {
-        id: "TXN002",
-        type: "checkout",
-        bookId: "PHY101",
-        userId: "STU001",
-        date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // due in 2 days
-        status: "active"
-      },
-      {
-        id: "TXN003",
-        type: "return",
-        bookId: "MATH101",
-        userId: "STU002",
-        date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
-        condition: "good"
-      }
-    ];
+    let transactionLog = [];
 
     // Current user data
     let currentUser = null;
@@ -1017,8 +1014,75 @@
 
 
     // Initialize the application
-    function init() {
-      // Check if user is already logged in (from localStorage)
+    
+function togglePasswordVisibility(id) {
+  const input = document.getElementById(id);
+  if (input) {
+    if (input.type === "password") {
+      input.type = "text";
+    } else {
+      input.type = "password";
+    }
+  }
+}
+
+
+function filterUsersTable() {
+  const searchTerm = document.getElementById('userSearchBar').value.toLowerCase();
+  const table = document.querySelector('#userListContainer table');
+  if (!table) return;
+  const rows = table.querySelectorAll('tbody tr');
+  rows.forEach(row => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(searchTerm) ? '' : 'none';
+  });
+}
+
+
+function init() {
+      
+  const storedUsers = localStorage.getItem('userDatabase');
+  const storedBooks = localStorage.getItem('bookDatabase');
+  const storedTransactions = localStorage.getItem('transactionLog');
+
+  if (storedUsers) userDatabase = JSON.parse(storedUsers);
+  if (storedBooks) bookDatabase = JSON.parse(storedBooks);
+  if (storedTransactions) {
+    transactionLog = JSON.parse(storedTransactions);
+    transactionLog = transactionLog.map(tx => {
+      tx.date = new Date(tx.date);
+      if (tx.dueDate) tx.dueDate = new Date(tx.dueDate);
+      return tx;
+    });
+  }
+
+  if (!storedUsers) {
+  userDatabase.students.push({
+    id: "STU001",
+    name: "Sample Student",
+    email: "student@college.edu",
+    password: "password123",
+    rollNumber: "CS2021001",
+    year: "2",
+    branch: "CSE",
+    borrowedBooks: [],
+    reservedBooks: []
+  });
+
+  userDatabase.librarians.push({
+    id: "LIB001",
+    name: "Sample Librarian",
+    email: "librarian@college.edu",
+    password: "lib123",
+    accessLevel: "full"
+  });
+  localStorage.setItem("userDatabase", JSON.stringify(userDatabase));
+}
+
+
+
+
+
       const savedUser = localStorage.getItem('libraryUser');
       if (savedUser) {
         currentUser = JSON.parse(savedUser);
@@ -1113,6 +1177,17 @@
       const confirmPassword = document.getElementById('regConfirmPassword').value;
       
       // Validation
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(email)) {
+        alert('Enter a valid email address');
+        return;
+      }
+
+      if (password.length < 6) {
+        alert('Password must be at least 6 characters long');
+        return;
+      }
+
       if (!name || !email || !password || !confirmPassword) {
         alert('Please fill in all fields');
         return;
@@ -1161,6 +1236,8 @@
         const year = document.getElementById('regYear').value;
         const branch = document.getElementById('regBranch').value;
         
+        const bookId = "BOOK" + Date.now();
+
         const newStudent = {
           id: "STU" + (userDatabase.students.length + 1).toString().padStart(3, '0'),
           name: name,
@@ -1182,12 +1259,28 @@
       // Save to localStorage
       localStorage.setItem('libraryUser', JSON.stringify(currentUser));
       
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
+      
       showDashboard();
       if (userType === "librarian") {
         loadLibrarianDashboard();
       } else {
         loadStudentBooks();
       }
+      
+      document.getElementById('regName').value = '';
+      document.getElementById('regEmail').value = '';
+      document.getElementById('regPassword').value = '';
+      document.getElementById('regConfirmPassword').value = '';
+      if (userType === "student") {
+        document.getElementById('regRoll').value = '';
+        document.getElementById('regYear').value = '';
+        document.getElementById('regBranch').value = '';
+      }
+
       alert('Registration successful!');
     }
 
@@ -1197,6 +1290,19 @@
       localStorage.removeItem('libraryUser');
       showLogin();
     }
+
+
+// Session timeout after 10 minutes of inactivity
+let idleTimer;
+document.onmousemove = resetIdleTimer;
+document.onkeypress = resetIdleTimer;
+
+function resetIdleTimer() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(logout, 10 * 60 * 1000); // 10 minutes
+}
+resetIdleTimer();
+
 
 // Show login form
     function showLogin() {
@@ -1338,7 +1444,12 @@
           }
         }
         
-        if (!book) return;
+        
+      if (!book) {
+        alert("Book not found. It may have been removed.");
+        return;
+      }
+
         
         const bookItem = document.createElement('div');
         bookItem.className = 'book-item';
@@ -1378,7 +1489,12 @@
           }
         }
         
-        if (!book) return;
+        
+      if (!book) {
+        alert("Book not found. It may have been removed.");
+        return;
+      }
+
         
         // Find the transaction for this book
         const transaction = transactionLog.find(t => 
@@ -1450,7 +1566,12 @@
         }
       }
       
-      if (!book) return;
+      
+      if (!book) {
+        alert("Book not found. It may have been removed.");
+        return;
+      }
+
       
       selectedBook = book;
       
@@ -1483,6 +1604,7 @@
       document.getElementById('bookDetailsModal').classList.remove('hidden');
       document.getElementById('bookActions').classList.remove('hidden');
       document.getElementById('reservationDetails').classList.add('hidden');
+  checkExistingReservationTimer();
 
 
       // Preload existing rating if it exists
@@ -1522,6 +1644,11 @@
       // Save to localStorage
       localStorage.setItem('libraryUser', JSON.stringify(currentUser));
       
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
+      
       // Show reservation details
       document.getElementById('bookActions').classList.add('hidden');
       document.getElementById('reservationDetails').classList.remove('hidden');
@@ -1551,7 +1678,11 @@
       if (!selectedBook) return;
       
       cancelReservationById(selectedBook.id);
-      closeBookDetails();
+      
+  const reservationKey = `reservation_${selectedBook.id}_${currentUser.id}`;
+  localStorage.removeItem(reservationKey);
+
+  closeBookDetails();
     }
 
     // Cancel reservation from list
@@ -1572,7 +1703,12 @@
         }
       }
       
-      if (!book) return;
+      
+      if (!book) {
+        alert("Book not found. It may have been removed.");
+        return;
+      }
+
       
       // Update book available count
       book.available++;
@@ -1583,6 +1719,11 @@
       
       // Save to localStorage
       localStorage.setItem('libraryUser', JSON.stringify(currentUser));
+      
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
       
       // Update transaction log
       const transactionIndex = transactionLog.findIndex(t => 
@@ -1625,30 +1766,84 @@
       }, 1000);
     }
 
-    // Switch tabs
+    
+// Enhancement: Persistent Reservation Expiry
+function startCountdown() {
+  const reservationKey = `reservation_${selectedBook.id}_${currentUser.id}`;
+  const expiryTime = Date.now() + 2 * 60 * 60 * 1000; // 2 hours
+  localStorage.setItem(reservationKey, expiryTime.toString());
+  beginTimer(expiryTime);
+}
+
+function beginTimer(expiryTime) {
+  const countdownElement = document.getElementById('countdown');
+
+  const timer = setInterval(() => {
+    const now = Date.now();
+    const diff = expiryTime - now;
+
+    if (diff <= 0) {
+      clearInterval(timer);
+      cancelReservation();
+      alert('Your reservation has expired!');
+      return;
+    }
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    countdownElement.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  }, 1000);
+}
+
+// Check reservation expiry on modal open
+function checkExistingReservationTimer() {
+  if (!selectedBook || !currentUser) return;
+  const reservationKey = `reservation_${selectedBook.id}_${currentUser.id}`;
+  const expiryTime = localStorage.getItem(reservationKey);
+  if (expiryTime) {
+    beginTimer(parseInt(expiryTime));
+  }
+}
+
+
+
+// Reset system
+function resetSystem() {
+  if (confirm("Are you sure you want to reset all data? This cannot be undone.")) {
+    localStorage.clear();
+    alert("System has been reset. Reloading...");
+    location.reload();
+  }
+}
+
+
+// Switch tabs
     function switchTab(tabId) {
-      // Hide all tab contents
+      if (tabId === 'libUsersTab') {
+        loadUserList();
+      }
+
       document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
       });
-      
-      // Deactivate all tabs
+
       document.querySelectorAll('.tab').forEach(tab => {
         tab.classList.remove('active');
       });
-      
-      // Show selected tab content
+
       document.getElementById(tabId).classList.add('active');
-      
-      // Activate selected tab
+
       const tabs = document.querySelectorAll('.tab');
       for (const tab of tabs) {
-        if (tab.getAttribute('onclick').includes(tabId)) {
+        if (tab.getAttribute('onclick') && tab.getAttribute('onclick').includes(tabId)) {
           tab.classList.add('active');
           break;
         }
       }
     }
+
 
 // Librarian Dashboard functions
     function loadLibrarianDashboard() {
@@ -1656,6 +1851,7 @@
       loadLibrarianBookList();
       loadTransactionLog();
       initializeCharts();
+      loadUserList();
     }
 
     // Update librarian statistics
@@ -1683,15 +1879,59 @@
       document.getElementById('availableBooksStat').textContent = availableBooks;
       document.getElementById('borrowedBooksStat').textContent = borrowedBooks;
       document.getElementById('overdueBooksStat').textContent = overdue;
+    } 
+
+
+
+    function renderPopularBooksChart() {
+      const ctx = document.getElementById("popularBooksChart").getContext("2d");
+
+      // Count total borrowings per book
+      const bookCounts = {};
+
+      for (const branch in bookDatabase) {
+        bookDatabase[branch].forEach(book => {
+          bookCounts[book.title] = (bookCounts[book.title] || 0) + (book.totalBorrowed || 0);
+        });
+      }
+
+      const labels = Object.keys(bookCounts);
+      const data = Object.values(bookCounts);
+
+      if (popularBooksChart) popularBooksChart.destroy(); // clean up existing
+
+      popularBooksChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{
+            label: "Times Borrowed",
+            data: data,
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
     }
-
-
 
 
     function initializeCharts() {
      updateRatingsAnalytics();                     // ⭐ Top Rated Books chart
      renderBorrowingTrendsChart(transactionLog);  // 📈 Borrowing Trends chart
+     renderPopularBooksChart(); 
     }
+    
+
+    
 
 
 
@@ -1912,6 +2152,16 @@
       
       // Update UI
       loadTransactionLog();
+      
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
+      
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
       updateLibrarianStats();
       
       // Show success message
@@ -2012,6 +2262,16 @@
       
       // Update UI
       loadTransactionLog();
+      
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
+      
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
       updateLibrarianStats();
       
       // Show success message
@@ -2065,6 +2325,7 @@
       
       // Create new book object
       const newBook = {
+    id: "BOOK" + Date.now(),
         id: generateBookId(branch),
         title: title,
         author: author,
@@ -2085,6 +2346,11 @@
       
       // Update UI
       loadLibrarianBookList();
+      
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
       updateLibrarianStats();
       
       // Clear form
@@ -2116,7 +2382,12 @@
     function editBook(bookId, branch) {
       // Find the book
       const book = bookDatabase[branch].find(b => b.id === bookId);
-      if (!book) return;
+      
+      if (!book) {
+        alert("Book not found. It may have been removed.");
+        return;
+      }
+
       
       // Simple prompt-based editing for demonstration
       const newTitle = prompt('Edit Title:', book.title);
@@ -2140,6 +2411,11 @@
       
       // Update UI
       loadLibrarianBookList();
+      
+  localStorage.setItem('userDatabase', JSON.stringify(userDatabase));
+  localStorage.setItem('bookDatabase', JSON.stringify(bookDatabase));
+  localStorage.setItem('transactionLog', JSON.stringify(transactionLog));
+
       updateLibrarianStats();
       
       alert(`Book "${book.title}" updated successfully.`);
