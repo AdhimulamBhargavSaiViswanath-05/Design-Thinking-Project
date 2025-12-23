@@ -328,13 +328,13 @@ This project demonstrates:
 
 > **Note:** Add screenshots of your application here
 
-| Student Dashboard | Book Search |
+| Problem | SolutionApproach |
 |-------------------|-------------|
-| ![Student Dashboard](#) | ![Book Search](#) |
+| ![Problem](screenshots/problem.png) | ![Solution](screenshots/WorkFlowLogic.png) |
 
-| Librarian Analytics | QR Code System |
-|---------------------|----------------|
-| ![Analytics](#) | ![QR Code](#) |
+| Student Dashboard | Librarian Dashboard |
+|-------------------|-------------|
+| ![Student Dashboard](screenshots/student_dashboard.png) | ![Librarian Dashboard](screenshots/librarian_dashboard.png) |
 
 ---
 
