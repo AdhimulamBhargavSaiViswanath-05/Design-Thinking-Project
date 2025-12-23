@@ -452,6 +452,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 <div align="center">
 
-**Made with ❤️ by Team Smart Library Assistant**
+**Made by Team Smart Library Assistant**
 
 </div>
